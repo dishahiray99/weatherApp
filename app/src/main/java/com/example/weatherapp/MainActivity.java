@@ -1,18 +1,21 @@
 package com.example.weatherapp;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
+
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.Comparator;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,13 +27,14 @@ public class MainActivity extends AppCompatActivity {
 
     MyAdapter adapter;
     ArrayList<WeatherDetails> weatherDetailsList;
-    ArrayList<String> cityNameList = new ArrayList<String>();
     RecyclerView recyclerView;
-    public static String baseUrl ="api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}";
+    public static String baseUrl ="https://api.openweathermap.org//data/2.5/";
     private static String appId = "3081158e0f99954927b3ab3c2a8aee8d";
     private static String name = "London";
     TextView tempText,cityText, countryText;
     EditText editText;
+    Button button, buttonSort;
+    String cityName;
 
 
 
@@ -40,28 +44,39 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //editText = findViewById(R.id.editText);
+        editText = findViewById(R.id.editText);
         tempText = findViewById(R.id.tempText);
         cityText = findViewById(R.id.cityText);
         countryText = findViewById(R.id.countryText);
-        addCitiesToTheList();
-        getCurrentWeatherData();
+        button = findViewById(R.id.button);
+        weatherDetailsList = new ArrayList<>();
 
+        buttonSort = findViewById(R.id.buttonSort);
+        buttonSort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                sortArrayList();
+                removeDuplicateCities();
+            }
+        });
+        createRecyclerView();
     }
 
 
+    public void getCurrentWeatherData(View v){
 
-    public void getCurrentWeatherData(){
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.openweathermap.org//data/2.5/")
+                .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         JsonApiWeather apiWeatherService = retrofit.create(JsonApiWeather.class);
 
-        for (int i =0; i<cityNameList.size(); i++) {
 
+            cityName = editText.getText().toString();
 
-            Call<WeatherDetails> call = apiWeatherService.getCurrentWeatherData("Nagpur", appId);
+            Call<WeatherDetails> call = apiWeatherService.getCurrentWeatherData(cityName, appId);
+
             call.enqueue(new Callback<WeatherDetails>() {
                 @Override
                 public void onResponse(Call<WeatherDetails> call, Response<WeatherDetails> response) {
@@ -72,21 +87,10 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     WeatherDetails details = response.body();
-//                /*Main main = details.getMain();
-//                Double temp = main.getTemp();
-//                Integer temperature = (int)(temp - 273.15);
-//                tempText.setText(String.valueOf(temperature)+"c");
-//                String city = details.getName();
-//                cityText.setText(city);
-//                Sys sys = details.getSys();
-//                String country = sys.getCountry();
-//                countryText.setText(country);*/
-
-                    weatherDetailsList = new ArrayList<>();
 
                     weatherDetailsList.add(details);
 
-                    createRecyclerView();
+                    adapter.notifyDataSetChanged();
 
                 }
 
@@ -96,19 +100,39 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-    }
+
+
 
    private void createRecyclerView() {
         recyclerView = findViewById(R.id.recyclerView);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this,2);
         adapter = new MyAdapter(this, weatherDetailsList);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(gridLayoutManager);
     }
 
 
-    private void addCitiesToTheList(){
-        cityNameList.add("Nagpur");
-        cityNameList.add("Mumbai");
-        cityNameList.add("Pune");
+
+
+    private void sortArrayList(){
+        Collections.sort(weatherDetailsList, new Comparator<WeatherDetails>() {
+            @Override
+            public int compare(WeatherDetails weatherDetails, WeatherDetails t1) {
+                return weatherDetails.getName().compareTo(t1.getName());
+            }
+        });
+        adapter.notifyDataSetChanged();
+    }
+
+
+    private void removeDuplicateCities(){
+        for(int cities= 0; cities < weatherDetailsList.size(); cities++){
+            for(int city= cities + 1; city < weatherDetailsList.size(); city++){
+                if(weatherDetailsList.get(cities).getName().equals(weatherDetailsList.get(city).getName())){
+                    weatherDetailsList.remove(city);
+                }
+            }
+            adapter.notifyDataSetChanged();
+        }
     }
 }

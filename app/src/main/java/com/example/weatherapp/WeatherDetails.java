@@ -23,15 +23,7 @@ public class WeatherDetails {
     @SerializedName("name")
     String name;
 
-    String imgUrl;
 
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
 
     public String getName() {
         return name;
@@ -51,10 +43,10 @@ public class WeatherDetails {
 
     @Override
     public String toString() {
-        return "WeatherDetails{" +
-                "main=" + main +
-                ", sys=" + sys +
-                ", name='" + name + '\'' +
-                '}';
+        return "     Weather Details " + '\n'+
+                '\n' +
+                " City Name : " + name + '\n' +
+                " Temperature : " + main.getTemp() +"\n"+
+                " Country name : " + sys.getCountry() +"\n";
     }
 }

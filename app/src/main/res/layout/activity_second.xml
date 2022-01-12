@@ -6,49 +6,51 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-
     <TextView
-        android:id="@+id/tempText"
+        android:id="@+id/textTemp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_margin="20dp"
         android:text="Temp"
-        android:textSize="40dp"
-        />
-    <TextView
-        android:id="@+id/cityText"
+        android:textSize="25dp"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <!--<TextView
+        android:id="@+id/textCity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/tempText"
+        app:layout_constraintTop_toBottomOf="@+id/textTemp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginTop="30dp"
         android:layout_marginLeft="20dp"
         android:text="City"
-        android:textSize="20dp"
+        android:textSize="40dp"
 
         />
 
     <TextView
-        android:id="@+id/countryText"
-        android:layout_width="99dp"
-        android:layout_height="49dp"
+        android:id="@+id/textCountry"
+        android:layout_width="163dp"
+        android:layout_height="61dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="5dp"
         android:text="Country"
-        android:textSize="20dp"
+        android:textSize="50dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cityText" />
+        app:layout_constraintTop_toBottomOf="@+id/textCity" />
 
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="170dp"
-        android:layout_height="119dp"
-        android:layout_marginLeft="30dp"
+        android:id="@+id/imageViewDetail"
+        android:layout_width="196dp"
+        android:layout_height="142dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
-        app:layout_constraintLeft_toRightOf="@+id/tempText"
+        app:layout_constraintLeft_toRightOf="@+id/textTemp"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_launcher_background" />
+        app:srcCompat="@drawable/ic_launcher_background" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
